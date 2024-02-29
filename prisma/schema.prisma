@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+enum TipoUsuario {
+  ADMIN
+  FUNCIONARIO
+}
+
+model Criminoso {
+id String @id @default(uuid()) @db.Uuid
+nome String @db.VarChar(60)
+endereco String @db.VarChar(200) 
+idade Int?
+createdAt DateTime @default(now()) @map("created_at")
+updatedAt DateTime @updatedAt @map("updated_at")
+
+crime Crime[]
+@@map("criminoso")
+}
+
+model Usuario {
+  id String @db.Uuid @id @default(uuid())
+  nome String @db.VarChar(50)
+  email String @db.VarChar(50) @unique
+  senha String @db.VarChar(50)
+  tipo   TipoUsuario?
+  token String?
+
+
+  dthrCriacao DateTime @default(now()) @map("dthr_criacao")
+  dthrAtualizacao DateTime @updatedAt @map("dthr_atualizacao")
+
+  @@map("usuario")
+}
+
+
+
+model Crime {
+id String @id @default(uuid()) @db.Uuid
+nome String @db.VarChar(60)
+endereco String @db.VarChar(200) 
+idCriminoso String @map("id_criminoso") @db.Uuid
+
+criminoso Criminoso @relation(fields: [idCriminoso], references: [id])
+
+createdAt DateTime @default(now()) @map("created_at")
+updatedAt DateTime @updatedAt @map("updated_at")
+
+arma Arma[]
+
+@@map("crime")
+}
+
+
+model Arma {
+id String @id @default(uuid()) @db.Uuid
+nome String @db.VarChar(60)
+
+
+idCrime String @map("id_crime") @db.Uuid
+
+crime Crime @relation(fields: [idCrime], references: [id])
+
+createdAt DateTime @default(now()) @map("created_at")
+updatedAt DateTime @updatedAt @map("updated_at")
+@@map("arma")
+}
