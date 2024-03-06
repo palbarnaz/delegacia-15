@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import repository from "../database/prisma.repository";
 import { AuthService } from "../services/auth.service";
 
 export async function validaLoginMiddleware(req: Request, res: Response, next: NextFunction) {
