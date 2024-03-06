@@ -10,6 +10,12 @@ import { validaLoginMiddleware } from "./middlewares/login.middleware";
 const app = express();
 app.use(express.json());
 
+const swaggerUi = require('swagger-ui-express');
+import * as swagger from './swagger.json'
+// const swaggerDocument = require('./swagger.json');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swagger));
+
 const criminosoController = new CriminosoController();
 const crimeController = new CrimeCrontroller();
 const usuarioController = new UsuarioController();
